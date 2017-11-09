@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace simondeeley\Tests;
 
+use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use simondeeley\NonNullableBehaviour;
@@ -38,16 +39,16 @@ final class NonNullableBehaviourTest extends TestCase
         };
     }
 
-    final public function testShouldThrowExceptionWhenInvalidTypePassed($data): void
+    final public function testShouldThrowInvalidArgumentExceptionWhenInvalidTypePassed($data): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         self::$class->test($data);
     }
 
-    final public function testShouldThrowExceptionWhenObjectHasNullProperties(): void
+    final public function testShouldThrowRuntimeExceptionWhenObjectHasNullProperties(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RuntimeException::class);
 
         self::$class = 1; // Deconstruct $class
     }

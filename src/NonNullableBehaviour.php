@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace simondeeley;
 
+use Throwable;
+use InvalidArgumentException;
+use RuntimeException;
+
 /**
  * Non-nullable Behavior
  *
@@ -29,21 +33,26 @@ trait NonNullableBehaviour
      * is thrown.
      *
      * @param mixed $arg
+     * @param Throwable $exception
      * @return void
-     * @throws InvalidArgumentException
+     * @throws Throwable
      */
-    final protected function checkNotNullable($arg): void
+    final protected function checkNotNullable($arg, Throwable $exception = null): void
     {
-         if (false === isset($arg)
-            || null == $arg
-            || NULL === $arg
-            || is_null($arg)
-         ) {
-            throw new InvalidArgumentException(sprintf(
+        if ($exception === null) {
+            $exception = new InvalidArgumentException(sprintf(
                 'A nullable or NULL argument was passed in %s',
                 get_class($this)
             ));
-         }
+        }
+
+        if (false === isset($arg)
+            || null == $arg
+            || NULL === $arg
+            || is_null($arg)
+        ) {
+            throw $exception;
+        }
     }
 
     /**
@@ -59,7 +68,7 @@ trait NonNullableBehaviour
     public function __destruct()
     {
         foreach (get_object_vars($this) as $key => $value) {
-            $this->checkNotNullable($value);
+            $this->checkNotNullable($value, new RuntimeException());
         }
     }
 }
