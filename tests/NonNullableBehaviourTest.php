@@ -39,6 +39,9 @@ final class NonNullableBehaviourTest extends TestCase
         };
     }
 
+    /**
+     * @dataProvider dataProvider
+     */
     final public function testShouldThrowInvalidArgumentExceptionWhenInvalidTypePassed($data): void
     {
         $this->expectException(InvalidArgumentException::class);
