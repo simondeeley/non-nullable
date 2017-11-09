@@ -59,7 +59,7 @@ trait NonNullableBehaviour
     public function __destruct()
     {
         foreach (get_object_vars($this) as $key => $value) {
-            checkNotNullable($value);
+            $this->checkNotNullable($value);
         }
     }
 }
