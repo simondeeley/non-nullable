@@ -34,7 +34,7 @@ if (!function_exists('is_nullable')) {
               if (is_nullable(extract(
                   $arg,
                   EXTR_PREFIX_INVALID | EXTR_REFS,
-                  bin2hex(random_bytes(32))
+                  bin2hex(random_bytes(5))
               ))) {
                   return true;
               }
