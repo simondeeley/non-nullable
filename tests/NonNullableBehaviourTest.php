@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace simondeeley\Tests;
 
 use RuntimeException;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use simondeeley\NonNullableBehaviour;
 
@@ -31,37 +30,56 @@ final class NonNullableBehaviourTest extends TestCase
 
             protected $foo = 1;
             protected $bar;
-
-            public function test($data): void
-            {
-                $this->checkNotNullable($data);
-            }
         };
     }
 
     /**
      * @dataProvider dataProvider
      */
-    final public function testShouldThrowInvalidArgumentExceptionWhenInvalidTypePassed($data): void
+    final public function testShouldCatchNullProperties($data): void
     {
-        $this->expectException(InvalidArgumentException::class);
-
-        self::$class->test($data);
+        $this->assertTrue(is_nullable($data));
     }
 
     final public function testShouldThrowRuntimeExceptionWhenObjectHasNullProperties(): void
     {
         $this->expectException(RuntimeException::class);
 
-        self::$class = 1; // Deconstruct $class
+        self::$class = 1; // Force deconstruct of $class
     }
 
 
     final public function dataProvider(): array
     {
         return [
-            'Using null' => [null],
-            'Using NULL constant' => [NULL],
+            'Simple argument' => [
+                null
+            ],
+            'Simple array' => [
+                [1, 2, 3, 4, null, 6]
+            ],
+            'Array with keys' => [
+                [
+                    'foo' => 'bar',
+                    'baz' => 16423,
+                    'foobar' => null
+                ]
+            ],
+            'Nested arrays' => [
+                [
+                    'a' => 1,
+                    'b' => 2 ,
+                    'c' => [
+                        1,
+                        2 => [
+                            1 => 1,
+                            2 => 2,
+                            3 => 3
+                        ],
+                        null
+                    ]
+                ]
+            ],
         ];
     }
 }

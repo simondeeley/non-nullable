@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace simondeeley;
 
-use Throwable;
-use InvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -26,36 +24,6 @@ use RuntimeException;
 trait NonNullableBehaviour
 {
     /**
-     * Type-check a variable
-     *
-     * Checks that the passed variable $arg is not nullable against all of the
-     * PHP implemented NULL types. If any checks are positive, then an exception
-     * is thrown.
-     *
-     * @param mixed $arg
-     * @param Throwable $exception
-     * @return void
-     * @throws Throwable
-     */
-    final protected function checkNotNullable($arg, Throwable $exception = null): void
-    {
-        if ($exception === null) {
-            $exception = new InvalidArgumentException(sprintf(
-                'A nullable or NULL argument was passed in %s',
-                get_class($this)
-            ));
-        }
-
-        if (false === isset($arg)
-            || null == $arg
-            || NULL === $arg
-            || is_null($arg)
-        ) {
-            throw $exception;
-        }
-    }
-
-    /**
      * Sanity-check all object properties
      *
      * When an immutable object is deconstruced then its state should be that of
@@ -63,12 +31,15 @@ trait NonNullableBehaviour
      * are null then an exception is thrown.
      *
      * @return void
-     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     public function __destruct()
     {
-        foreach (get_object_vars($this) as $key => $value) {
-            $this->checkNotNullable($value, new RuntimeException());
+        if (is_nullable(get_object_vars($this))) {
+            throw new RuntimeException(sprintf(
+                'A property in %s has been set to null, which is not allowed.',
+                get_class($this)
+            ));
         }
     }
 }

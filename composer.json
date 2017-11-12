@@ -1,7 +1,7 @@
 {
     "name": "simondeeley/non-nullable",
     "description": "A reusable trait for PHP implementing non-nullable behaviour",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "type": "library",
     "keywords": ["php", "non-nullable", "trait", "behaviour"],
     "homepage": "https://github.com/simondeeley",
@@ -29,6 +29,7 @@
     "autoload": {
         "psr-4": {
             "simondeeley\\": "src/"
-        }
+        },
+        "files": ["src/utils/functions.php"]
     }
 }
