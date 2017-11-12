@@ -33,7 +33,7 @@ if (!function_exists('is_nullable')) {
           if (is_array($arg) || $arg instanceof Traversable) {
               if (is_nullable(extract(
                   $arg,
-                  (EXTR_PREFIX_INVALID || EXTR_REFS),
+                  EXTR_PREFIX_INVALID | EXTR_REFS,
                   bin2hex(random_bytes(32))
               ))) {
                   return true;
